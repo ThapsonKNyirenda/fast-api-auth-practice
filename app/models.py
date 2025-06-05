@@ -16,14 +16,16 @@ class PostSchema(BaseModel):
          
 
 class UserSchema(BaseModel):
+    id: Optional[int] = Field(default=None)
     fullname: str = Field(default=None)
     email: EmailStr = Field(default=None)
     password: str = Field(default=None)
     class config:
         schema_extra = {
             "example": {
+                "id": 1,
                 "fullname": "sampleuser",
-                "email": "Ft7iJ@example.com",
+                "email": "user@example.com",
                 "password": "password123"
             }
         }

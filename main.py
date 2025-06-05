@@ -57,11 +57,14 @@ def create_post(post:PostSchema):
     
 @app.get("/users", tags=["Users"])
 def get_all_users():
-    return users
+    return {
+        "data": users
+    }
 
 # Function for creating a user
 @app.post("/users", tags=["Users"])
 def user_signup(user: UserSchema = Body(default=None)):
+    user.id = len(users) + 1
     users.append(user)
     return {
         "message": "User created successfully",
