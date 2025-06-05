@@ -1,7 +1,8 @@
 import uvicorn
-from fastapi import Body, FastAPI
+from fastapi import Body, FastAPI, Depends
 from app.auth.jwt_handler import signJWT
 from app.models import PostSchema, UserLoginSchema, UserSchema
+from app.auth.jwt_bearer import get_current_user, jwtBearer
 
 app = FastAPI()
 
@@ -45,7 +46,7 @@ def get_one_post(post_id:int):
             return {"data": post}
 
 
-@app.post("/posts", tags=["Posts"])
+@app.post("/posts", dependencies=[Depends(jwtBearer())], tags=["Posts"])
 def create_post(post:PostSchema):
     post.id = len(posts) + 1
     posts.append(post.dict())
@@ -81,3 +82,7 @@ def user_login(user: UserLoginSchema = Body(default=None)):
         return {
             "error": "Invalid email or password"
         }
+
+@app.get("/me", tags=["Users"])
+def get_logged_in_user(user: dict = Depends(get_current_user)):
+    return {"message": "This is the current user", "user": user}

@@ -1,12 +1,9 @@
 import time
 import jwt
-import os
-from dotenv import load_dotenv
+from decouple import config
 
-load_dotenv()
-
-JWT_SECRET= os.getenv("secret")
-JWT_ALGORITHM = os.getenv("algorithm")
+JWT_SECRET= config("secret")
+JWT_ALGORITHM = config("algorithm")
 
 # Function to return the generated token
 def token_response(token:str):
@@ -29,5 +26,7 @@ def decodeJWT(token: str):
         decoded_token=jwt.decode(token, JWT_SECRET, algorithms=[JWT_ALGORITHM])
         return decoded_token if decoded_token["expires"] >= time.time() else None
     except:
-        return None
+        return {
+            "error": "Invalid token or expired token"
+        }
 
