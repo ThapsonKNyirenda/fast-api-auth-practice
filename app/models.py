@@ -13,3 +13,29 @@ class PostSchema(BaseModel):
                  "content": "This is a sample post content."
              }
          }
+         
+
+class UserSchema(BaseModel):
+    fullname: str = Field(default=None)
+    email: EmailStr = Field(default=None)
+    password: str = Field(default=None)
+    class config:
+        schema_extra = {
+            "example": {
+                "fullname": "sampleuser",
+                "email": "Ft7iJ@example.com",
+                "password": "password123"
+            }
+        }
+        
+class UserLoginSchema(BaseModel):
+    email: str = Field(default=None)
+    password: str = Field(default=None)
+    
+    class config:
+        schema_extra = {
+            "example": {
+                "email": "sampleuser",
+                "password": "password123"
+            }
+        }

@@ -1,6 +1,7 @@
 import uvicorn
-from fastapi import FastAPI
-from app.models import PostSchema
+from fastapi import Body, FastAPI
+from app.auth.jwt_handler import signJWT
+from app.models import PostSchema, UserLoginSchema, UserSchema
 
 app = FastAPI()
 
@@ -52,3 +53,31 @@ def create_post(post:PostSchema):
         "message": "Post created successfully",
         "data": post
     }
+    
+@app.get("/users", tags=["Users"])
+def get_all_users():
+    return users
+
+# Function for creating a user
+@app.post("/users", tags=["Users"])
+def user_signup(user: UserSchema = Body(default=None)):
+    users.append(user)
+    return {
+        "message": "User created successfully",
+        "data": user
+    }
+    
+def check_user(data: UserLoginSchema):
+    for user in users:
+        if user.email == data.email and user.password == data.password:
+            return True
+        return False
+
+@app.post("/user/login", tags=["Users"])
+def user_login(user: UserLoginSchema = Body(default=None)):
+    if check_user(user):
+        return signJWT(user.email)
+    else:
+        return {
+            "error": "Invalid email or password"
+        }
