@@ -91,4 +91,6 @@ def get_logged_in_user(user: dict = Depends(get_current_user)):
     return {"message": "This is the current user", "user": user}
 
 # This is a test comment
+
 # Second comment for testing purposes
+
